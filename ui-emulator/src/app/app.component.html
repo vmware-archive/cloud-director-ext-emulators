@@ -1,0 +1,32 @@
+<clr-main-container>
+  <clr-header>
+    <div class="branding">
+      <a [routerLink]="" class="nav-link">
+        <img *ngIf="branding.headerLogo; else defaultLogo" [src]="branding.headerLogo" class="header-logo" />
+        <span class="title">{{branding.headerTitle}}</span>
+      </a>
+    </div>
+    <div>
+      <clr-dropdown class="dropdown">
+        <button class="nav-link nav-text" class="hamburger-button" clrDropdownTrigger>
+          <clr-icon class="is-inverse" shape="bars" size="24"></clr-icon>
+        </button>
+        <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+          <ng-container *ngFor="let pluginRegistration of pluginRegistrations">
+            <a [routerLink]="pluginRegistration.path" routerLinkActive="active" clrDropdownItem>{{pluginRegistration.label}}</a>
+          </ng-container>
+        </clr-dropdown-menu>
+      </clr-dropdown>
+      <span>{{activePlugin?.label}}</span>
+    </div>
+  </clr-header>
+  <div class="content-wrapper">
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</clr-main-container>
+
+<ng-template #defaultLogo>
+  <clr-icon shape="vm" class="is-inverse header-logo"></clr-icon>
+</ng-template>
