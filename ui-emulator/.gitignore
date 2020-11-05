@@ -1,39 +1,19 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
+target/
+dist/
+node/
+node_modules/
+ui_ext_api.ini
+yarn-error.log
+.awcache
 
-# compiled output
-/dist
-/tmp
-/out-tsc
-
-# dependencies
-/node_modules
-
-# IDEs and editors
-/.idea
+# Eclipse
+.metadata/
 .project
 .classpath
-.c9/
-*.launch
 .settings/
-*.sublime-workspace
 
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+# VSCode
+.vscode/
 
-# misc
-/.sass-cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-npm-debug.log
-yarn-error.log
-testem.log
-/typings
-
-# System Files
-.DS_Store
-Thumbs.db
+# IntelliJ
+.idea

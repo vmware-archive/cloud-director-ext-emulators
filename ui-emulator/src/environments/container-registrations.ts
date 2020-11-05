@@ -3,6 +3,7 @@ import { InjectionToken } from "@angular/core";
 export const API_ROOT_URL = new InjectionToken("API_ROOT_URL");
 export const EXTENSION_ASSET_URL = new InjectionToken("EXTENSION_ASSET_URL");
 export const EXTENSION_ROUTE = new InjectionToken("EXTENSION_ROUTE");
+export const SESSION_SCOPE = new InjectionToken("SESSION_SCOPE");
 export class AuthTokenHolderService {
     token: string;
 }

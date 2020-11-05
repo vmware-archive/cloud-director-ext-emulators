@@ -1,10 +1,10 @@
 import { Injectable, Injector, NgModuleFactoryLoader, Inject, Optional, ReflectiveInjector } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { SessionType } from '@vcd/bindings/vcloud/api/rest/schema_v1_5';
-import { CONTAINER_CREDENTIALS, Credentials, UserCredentials, TokenCredentials } from 'src/environments/access';
-import { PluginRegistration } from 'src/plugins';
+import { CONTAINER_CREDENTIALS, Credentials, UserCredentials, TokenCredentials } from '../environments/access';
+import { PluginRegistration } from '../plugins';
 import { Router } from '@angular/router';
-import { EXTENSION_ASSET_URL, EXTENSION_ROUTE, AuthTokenHolderService } from 'src/environments/container-registrations';
+import { EXTENSION_ASSET_URL, EXTENSION_ROUTE, AuthTokenHolderService, SESSION_SCOPE } from '../environments/container-registrations';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +51,7 @@ export class AppConfigService {
       const moduleInjector: Injector = ReflectiveInjector.resolveAndCreate([
         { provide: EXTENSION_ASSET_URL, useValue: `${plugin.root}/public/assets` },
         { provide: EXTENSION_ROUTE, useValue: plugin.path },
+        { provide: SESSION_SCOPE, useValue: ""},
         { provide: AuthTokenHolderService, useValue: { token: authToken } }
       ], this.injector);
       const module = moduleFactory.create(moduleInjector);

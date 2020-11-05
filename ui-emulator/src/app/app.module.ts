@@ -8,11 +8,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from '../environments/environment';
 import { CONTAINER_BRANDING } from '../environments/branding';
 import { StoreModule } from '@ngrx/store';
-import { PLUGINS } from 'src/plugins';
-import { API_ROOT_URL } from 'src/environments/container-registrations';
+import { PLUGINS } from '../plugins';
+import { API_ROOT_URL } from '../environments/container-registrations';
 import { AppConfigService } from './app-config.service';
 import { HttpClientModule } from '@angular/common/http';
-import { CONTAINER_CREDENTIALS, Credentials } from 'src/environments/access';
+import { CONTAINER_CREDENTIALS, Credentials } from '../environments/access';
 
 @NgModule({
   declarations: [
@@ -39,6 +39,7 @@ export class AppModule {}
 export function bootstrapApplication(appConfig: AppConfigService): () => Promise<boolean> {
   return () => new Promise<boolean>(resolve => {
     console.group("[application bootstrap]")
+    console.log(PLUGINS)
     appConfig.login().then(authToken => {
       let loaders: Promise<any>[] = [];
       PLUGINS.forEach(plugin => {

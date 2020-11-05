@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { CONTAINER_BRANDING, Branding } from '../environments/branding';
 import { Title } from '@angular/platform-browser';
-import { PluginRegistration, PLUGINS } from 'src/plugins';
+import { PluginRegistration, PLUGINS } from '../plugins';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 

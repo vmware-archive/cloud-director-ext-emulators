@@ -14,6 +14,7 @@ export class PluginRegistration {
     }
 };
 
-export const PLUGINS: PluginRegistration[] = [
-
-];
+import plugins from '.env/plugins.json';
+export const PLUGINS: PluginRegistration[] = plugins.map(p => {
+    return new PluginRegistration(p.root, p.module, p.label);
+})

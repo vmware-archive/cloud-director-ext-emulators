@@ -1,0 +1,5 @@
+[{
+    "label": "SimplePluginModule",
+    "root": "src",
+    "module": "main/simple-plugin.module#SimplePluginModule"
+}]
