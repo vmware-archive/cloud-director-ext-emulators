@@ -1,4 +1,4 @@
-import { InjectionToken } from "@angular/core";
+import { InjectionToken } from '@angular/core';
 
 export class UserCredentials {
     username: string;
@@ -12,4 +12,4 @@ export class TokenCredentials {
 
 export type Credentials = UserCredentials | TokenCredentials;
 
-export const CONTAINER_CREDENTIALS = new InjectionToken<Credentials>("VCD authentication credentials");
+export const CONTAINER_CREDENTIALS = new InjectionToken<Credentials>('VCD authentication credentials');

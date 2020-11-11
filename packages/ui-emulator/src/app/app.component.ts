@@ -34,7 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
       if (event instanceof NavigationEnd) {
         this.setPluginContext();
       }
-    })
+    });
   }
 
   ngOnDestroy(): void {

@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "engines": {
+    "node": ">= 10.14.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "lerna": "^3.22.1"
+  },
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "lint": "lerna run lint",
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "test-ci": "lerna run test-ci",
+    "publish": "lerna publish from-package --no-git-reset --no-private --yes"
+  },
+  "name": "cloud-director-ext-emulators"
+}
