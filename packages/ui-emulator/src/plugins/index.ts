@@ -10,11 +10,11 @@ export class PluginRegistration {
     }
 
     get path(): string {
-        return this.module.split("#")[1];
+        return this.module.split('#')[1];
     }
-};
+}
 
 import plugins from '.env/plugins.json';
 export const PLUGINS: PluginRegistration[] = plugins.map(p => {
     return new PluginRegistration(p.root, p.module, p.label);
-})
+});

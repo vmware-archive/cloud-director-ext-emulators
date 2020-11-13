@@ -19,26 +19,26 @@ export class AppConfigService {
 
   login(): Promise<string> {
     if (!this.credentials) {
-      console.group("(authentication)");
-      console.log("No credentials provided. Authentication skipped.");
+      console.group('(authentication)');
+      console.log('No credentials provided. Authentication skipped.');
       console.groupEnd();
-      return Promise.resolve("");
+      return Promise.resolve('');
     }
 
     if (this.isTokenCredentials(this.credentials)) {
-      console.group("(authentication)");
-      console.log("Token credentials provided. Session creation skipped.");
+      console.group('(authentication)');
+      console.log('Token credentials provided. Session creation skipped.');
       console.groupEnd();
       return Promise.resolve(this.credentials.token);
     }
 
     const auth: string = btoa(`${this.credentials.username}@${this.credentials.tenant}:${this.credentials.password}`);
-    console.group("(authentication)");
-    console.log("Authenticating user", this.credentials.username);
+    console.group('(authentication)');
+    console.log('Authenticating user', this.credentials.username);
     console.groupEnd();
-    return this.http.post("api/sessions", null, {
-      observe: "response",
-      headers: { "Authorization": `Basic ${auth}`, "Accept": "application/*+json;version=32.0", "Content-Type": "application/*+json" }
+    return this.http.post('api/sessions', null, {
+      observe: 'response',
+      headers: { 'Authorization': `Basic ${auth}`, 'Accept': 'application/*+json;version=32.0', 'Content-Type': 'application/*+json' }
     }).toPromise().then((response: HttpResponse<SessionType>) => {
       return `${response.headers.get('x-vmware-vcloud-token-type')} ${response.headers.get('x-vmware-vcloud-access-token')}`;
     });
@@ -46,37 +46,37 @@ export class AppConfigService {
 
   loadPlugin(plugin: PluginRegistration, authToken: string): Promise<void> {
     return this.loader.load(`${plugin.root}/${plugin.module}`).then(moduleFactory => {
-      console.group(`(plugin registration: ${plugin.path})`)
-      console.log("Plugin loaded");
+      console.group(`(plugin registration: ${plugin.path})`);
+      console.log('Plugin loaded');
       const moduleInjector: Injector = ReflectiveInjector.resolveAndCreate([
         { provide: EXTENSION_ASSET_URL, useValue: `${plugin.root}/public/assets` },
         { provide: EXTENSION_ROUTE, useValue: plugin.path },
-        { provide: SESSION_SCOPE, useValue: ""},
+        { provide: SESSION_SCOPE, useValue: ''},
         { provide: AuthTokenHolderService, useValue: { token: authToken } }
       ], this.injector);
       const module = moduleFactory.create(moduleInjector);
-      console.log("Module created");
+      console.log('Module created');
 
       // Overwrite the create method to return the singleton.
       moduleFactory.create = () => module;
 
-      let router: Router = this.injector.get(Router);
+      const router: Router = this.injector.get(Router);
       router.config.push({ path: plugin.path, loadChildren: () => moduleFactory });
-      console.log("Routes registered");
+      console.log('Routes registered');
       console.groupEnd();
-    })
+    });
   }
 
   configureRoutes(): Promise<boolean> {
     return new Promise<boolean>(resolve => {
-      console.group("(routing)")
-      let router: Router = this.injector.get(Router);
+      console.group('(routing)');
+      const router: Router = this.injector.get(Router);
       router.resetConfig(router.config);
-      console.log("Updated router configuration");
+      console.log('Updated router configuration');
       console.groupEnd();
 
       resolve(true);
-    })
+    });
   }
 
   private isTokenCredentials(credentials: Credentials): credentials is TokenCredentials {

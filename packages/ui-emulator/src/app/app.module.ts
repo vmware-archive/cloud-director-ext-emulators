@@ -27,9 +27,9 @@ import { CONTAINER_CREDENTIALS, Credentials } from '../environments/access';
     StoreModule.forRoot({})
   ],
   providers: [
-    { provide: CONTAINER_BRANDING, useValue: environment["branding"] },
-    { provide: CONTAINER_CREDENTIALS, useValue: environment["credentials"] },
-    { provide: API_ROOT_URL, useValue: "" },
+    { provide: CONTAINER_BRANDING, useValue: environment['branding'] },
+    { provide: CONTAINER_CREDENTIALS, useValue: environment['credentials'] },
+    { provide: API_ROOT_URL, useValue: '' },
     { provide: APP_INITIALIZER, useFactory: bootstrapApplication, multi: true, deps: [AppConfigService] },
   ],
   bootstrap: [AppComponent]
@@ -38,17 +38,17 @@ export class AppModule {}
 
 export function bootstrapApplication(appConfig: AppConfigService): () => Promise<boolean> {
   return () => new Promise<boolean>(resolve => {
-    console.group("[application bootstrap]")
-    console.log(PLUGINS)
+    console.group('[application bootstrap]');
+    console.log(PLUGINS);
     appConfig.login().then(authToken => {
-      let loaders: Promise<any>[] = [];
+      const loaders: Promise<any>[] = [];
       PLUGINS.forEach(plugin => {
         loaders.push(appConfig.loadPlugin(plugin, authToken));
       });
       Promise.all(loaders).then(() => appConfig.configureRoutes()).then(() => {
         console.groupEnd();
-        resolve(true)
-      })
-    })
+        resolve(true);
+      });
+    });
   });
 }
