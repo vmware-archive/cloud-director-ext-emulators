@@ -15,7 +15,7 @@
     "build": "lerna run build",
     "test": "lerna run test",
     "test-ci": "lerna run test-ci",
-    "publish": "lerna publish from-package --no-git-reset --no-private --yes"
+    "publish": "lerna publish from-package --no-git-reset --no-private --yes --no-verify-access"
   },
   "name": "cloud-director-ext-emulators"
 }
