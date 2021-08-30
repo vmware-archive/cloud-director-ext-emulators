@@ -76,6 +76,27 @@ jobs:
             **/lib
           key: ${{github.sha}}-artifacts
       - run: npm run build
+  generate-dependencies:
+    runs-on: ubuntu-latest
+    name: Generate provenance files
+    if: github.ref != 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: [dependencies, build]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: npm run gen-dependencies
+      - run: |
+          if (( $(git status | grep modified | wc -l | xargs) > 0))
+          then
+            git config --global user.name "ilesev-vmw"
+            git config --global user.email "ilesev@vmware.com"
+
+            git add -A
+            git commit -s -m "Update provenance files"
+            git push
+          fi
   publish-next:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
