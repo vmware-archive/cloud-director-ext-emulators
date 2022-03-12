@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "npm run build:utils && ng build",
+    "build:utils": "cd ./utils && tsc",
     "test": "ng test",
     "test-ci": "ng test --configuration=test-ci",
     "lint": "ng lint",
