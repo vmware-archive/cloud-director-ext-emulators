@@ -1,5 +1,6 @@
 [{
     "label": "SimplePluginModule",
     "root": "src",
-    "module": "main/simple-plugin.module#SimplePluginModule"
+    "module": "main/simple-plugin.module#SimplePluginModule",
+    "assetsPath": "public/assets"
 }]

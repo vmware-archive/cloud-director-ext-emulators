@@ -49,7 +49,7 @@ export class AppConfigService {
       console.group(`(plugin registration: ${plugin.path})`);
       console.log('Plugin loaded');
       const moduleInjector: Injector = ReflectiveInjector.resolveAndCreate([
-        { provide: EXTENSION_ASSET_URL, useValue: `${plugin.root}/public/assets` },
+        { provide: EXTENSION_ASSET_URL, useValue: plugin.assetsPath },
         { provide: EXTENSION_ROUTE, useValue: plugin.path },
         { provide: SESSION_SCOPE, useValue: ''},
         { provide: AuthTokenHolderService, useValue: { token: authToken } }

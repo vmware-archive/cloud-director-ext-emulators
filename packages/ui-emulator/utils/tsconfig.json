@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "lib",
+    "rootDir": ".",
+    "strict": false,
+    "target": "es2015",
+    "resolveJsonModule": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "./**/*"
+  ],
+  "exclude": [
+    "lib"
+  ]
+}
