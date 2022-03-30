@@ -46,13 +46,15 @@ export class UiEmulatorUtils {
      * @param elementsRootRelativePath - relative path to root dir containing all plugin folders
      * @param elementFolderNames - all ui plugin folders
      * @param vcdConfig - VCD Configuration object
+     * @param serveArgs - Arguments passed to ng serve
      */
     public static async serve(uiEmulatorConfigRoot: string,
                               elementsRootRelativePath: string,
                               elementFolderNames: string[],
                               vcdConfig: {
                                   token: string, cellUrl: string
-                              }
+                              },
+                              serveArgs?: string[]
     ) {
 
         const rootDir = path.join(uiEmulatorConfigRoot, '.env'); // Extract as optional parameter?
@@ -113,7 +115,7 @@ export class UiEmulatorUtils {
             this.storeJsonConfig(uiEmulatorConfigRoot, 'angular.json', angularJson);
             this.storeJsonConfig(uiEmulatorConfigRoot, 'tsconfig.emulator.json', tsconfigJson);
         }
-        spawn('ng', ['serve'], {
+        spawn('ng', ['serve', ...( serveArgs ? serveArgs : [])], {
             cwd: uiEmulatorConfigRoot,
             stdio: 'inherit'
         });
