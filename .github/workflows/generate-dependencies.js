@@ -3,7 +3,7 @@ const path = require('path');
 
 const ignoredFolders = ['.github', '.gradle', '.idea', '.git', 'node_modules', 'lib', 'src', 'tests'];
 const generatedFileName = 'provenance.json';
-const projectName = 'vcd-ext-sdk/';
+const projectName = 'cloud-director-ext-emulators/';
 
 function extractDependencies(currentDir, components) {
     try {
@@ -70,24 +70,33 @@ function extract(dependencies, component) {
 function generateResult(name, version, currentDir) {
     const dir = currentDir.substr(currentDir.lastIndexOf(projectName) + projectName.length);
     return {
-        id: 'http://vmware.com/schemas/software_provenance-0.2.0.json',
+        id: 'http://vmware.com/schemas/software_provenance-0.2.5.json',
         root: version,
-        'all-components': {
-            name: name,
-            version: version,
-            'source_repositories': [
-                {
-                    content: "source",
-                    host: "github.com",
-                    protocol: "git",
-                    paths: [
-                        "/vmware/vcd-ext-sdk/tree/main/" + dir
-                    ],
-                    branch: 'main'
-                },
-            ],
-            components: {},
-            'artifact_repositories': []
+        tools: {
+            "https://github.com/": null
+        },
+        'all_components': {
+            'component': {
+                typename: "comp.build.git",
+                name: name,
+                version: version,
+                'source_repositories': [
+                    {
+                        content: "source",
+                        host: "github.com",
+                        protocol: "git",
+                        paths: [
+                            "/vmware/cloud-director-ext-emulators/tree/main/" + dir
+                        ],
+                        branch: 'main'
+                    },
+                ],
+                components: [],
+                'artifact_repositories': [],
+                "virtual_centers": [],
+                "target_repositories": [],
+                all_ephemeral: "true"
+            }
         }
     };
 }
@@ -119,16 +128,15 @@ function writeFile(dir, result) {
     for (const [key, value] of Object.entries(components)) {
         const dir = value.directory;
         const provenanceFile = generateResult(key, value.version, dir);
-        const artifactRepos = provenanceFile['all-components']['artifact_repositories'];
+        const artifactRepos = provenanceFile['all_components']['component']['artifact_repositories'];
         value.dependencies.forEach(dependency => {
             artifactRepos.push({
                 content: 'binary',
                 protocol: 'HTTPS',
                 host: dependency.host,
-                path: dependency.path
+                paths: [dependency.path]
             })
         });
         writeFile(dir, provenanceFile);
     }
 })();
-
