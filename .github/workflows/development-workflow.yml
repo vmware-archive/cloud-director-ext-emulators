@@ -80,9 +80,9 @@ jobs:
             **/lib
           key: ${{github.sha}}-artifacts
       - run: npm run build
-  generate-dependencies:
+  submit-provenance:
     runs-on: ubuntu-latest
-    name: Generate provenance files
+    name: Submit Provenance
     if: github.ref != 'refs/heads/main' && github.event_name != 'pull_request'
     needs: [dependencies, build]
     steps:
@@ -101,6 +101,11 @@ jobs:
             git commit -s -m "Update provenance files"
             git push
           fi
+      - run: bash ./.github/scripts/provenance.sh
+        shell: bash
+        env:
+          SRP_CLIENT_ID: ${{ secrets.client_id }}
+          SRP_CLIENT_SECRET: ${{ secrets.client_secret }}
   publish-next:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
