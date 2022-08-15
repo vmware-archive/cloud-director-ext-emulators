@@ -1,6 +1,8 @@
 import path from "path";
 import fs from "fs";
 import {spawn} from "child_process";
+import {CloudDirectorConfig} from '@vcd/node-client';
+import inquirer from "inquirer";
 
 export class UiEmulatorUtils {
 
@@ -115,10 +117,95 @@ export class UiEmulatorUtils {
             this.storeJsonConfig(uiEmulatorConfigRoot, 'angular.json', angularJson);
             this.storeJsonConfig(uiEmulatorConfigRoot, 'tsconfig.emulator.json', tsconfigJson);
         }
-        spawn('ng', ['serve', ...( serveArgs ? serveArgs : [])], {
+        spawn('ng', ['serve', ...(serveArgs ? serveArgs : [])], {
             cwd: uiEmulatorConfigRoot,
             stdio: 'inherit'
         });
         return Promise.resolve();
+    }
+}
+
+export class VcdAuth {
+
+    /**
+     * Prompts the user to select particular VCD auth configuration from the store
+     * @param vcdAuthFile - path to the VCD authentication store file
+     */
+    public static async use(vcdAuthFile: string) {
+
+        const configs = CloudDirectorConfig.getConfigurations(vcdAuthFile);
+
+        if (configs.configurations.length <= 0) {
+            console.log("No VCD Authentication Configurations stored yet!");
+            return;
+        }
+
+        const answers = await inquirer.prompt({
+            type: 'list',
+            name: 'alias',
+            message: 'Select configuration',
+            default: configs.current,
+            loop: false,
+            choices: configs.configurations.map((element) => {
+                return {
+                    name: `${element.key}: ${element.username}/${element.org} ${element.basePath}`,
+                    value: element.key
+                };
+            }),
+        });
+        CloudDirectorConfig.use(answers.alias, vcdAuthFile);
+
+        return await this.getCloudDirectorConfig(vcdAuthFile);
+    }
+
+    /**
+     * Returns current VCD Auth configuration
+     * @param vcdAuthFile - path to the VCD authentication store file
+     */
+    public static async getCloudDirectorConfig(vcdAuthFile: string): Promise<CloudDirectorConfig> {
+        let config = CloudDirectorConfig.fromFile(vcdAuthFile);
+        if (!config.connectionAuth.authorized && config.connectionAuth.authorizationError === 'Token expired') {
+            const answers = await inquirer.prompt({
+                type: 'password',
+                name: 'password',
+                message:
+                    `Token has expired. Please enter the password for ${config.authentication.username}@${config.authentication.org} again: `,
+            });
+            const password = answers.password;
+            config = await this.loginAndStore(
+                CloudDirectorConfig.getConfigurations().current,
+                config.basePath, config.authentication.username, config.authentication.org, password, vcdAuthFile);
+        }
+        return config;
+    }
+
+    /**
+     * Creates a new VCD Auth configuration and stores it VCD authentication store file
+     * @param alias - alias use for storing
+     * @param vcdHost - Cloud director host
+     * @param user - username
+     * @param org - organization
+     * @param password - password
+     * @param vcdAuthFile - path to the VCD authentication store file
+     */
+    public static async loginAndStore(alias: string, vcdHost: string, user: string, org: string, password: string, vcdAuthFile: string) {
+        const config = await CloudDirectorConfig.withUsernameAndPassword(
+            vcdHost,
+            user,
+            org,
+            password
+        );
+        if (!config.connectionAuth.authorized) {
+            console.warn('Connection error: ' + config.connectionAuth.authorizationError);
+            console.log(config.connectionAuth.certificate);
+            const answers = await inquirer.prompt({
+                type: 'confirm',
+                name: 'accept',
+                message: 'Do you accept the provided certificate?',
+            });
+            config.connectionAuth.authorized = answers.accept;
+        }
+        config.saveConfig(alias, vcdAuthFile);
+        return config;
     }
 }
